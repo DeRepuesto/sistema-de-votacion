@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Votación</title>
+    <style>
+        body {
+            background: url('https://associacions.andorralavella.ad/sites/default/files/2023%20Logo%20CVA.png') no-repeat center center fixed;
+            background-size: cover;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        form {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        select, button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sistema de Votación</h1>
+    <form id="votingForm">
+        <label for="category1">Categoría 1:</label>
+        <select id="category1" name="category1">
+            <option value="Daniel">Daniel</option>
+            <option value="Carol">Carol</option>
+        </select><br><br>
+        <!-- Puedes agregar más categorías aquí según sea necesario -->
+        <button type="submit">Votar</button>
+    </form>
+
+    <script>
+        document.getElementById('votingForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Evitar el envío del formulario por defecto
+            var formData = new FormData(e.target); // Obtener los datos del formulario
+            var votes = {}; // Objeto para almacenar los votos
+            formData.forEach(function(value, key){
+                votes[key] = value;
+            });
+            fetch('https://script.google.com/macros/s/AKfycbxY1BhDR2DMMTcqALu_1oL6a846aryfqzLp3IVqmg/dev', { // Reemplaza con tu URL
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(votes)
+            }).then(response => {
+                if (response.ok) {
+                    return response.json(); // Convertir la respuesta a JSON
+                } else {
+                    throw new Error('Error al enviar el voto');
+                }
+            }).then(data => {
+                alert(data.message); // Mostrar mensaje de respuesta
+            }).catch(error => {
+                console.error(error.message);
+                alert('Error al enviar el voto. Por favor, inténtalo de nuevo más tarde.');
+            });
+        });
+    </script>
+</body>
+</html>
